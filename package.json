@@ -1,0 +1,15 @@
+{
+	"name": "com.gambitmonkey.playfabtools",
+	"displayName": "GambitMonkey PlayFab Tools",
+	"version": "1.0.0",
+	"unity": "2019.3",
+	"author": "GambitMonkey Games",
+	"description": "PlayFab Tools for Custom Game Servers",
+	"dependencies": {
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gambit-monkey/PlayFabTools.git",
+		"revision": "679387cb1fa822190b530bdbb8ea0945f508b5f6"
+	}
+}
