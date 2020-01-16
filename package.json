@@ -6,10 +6,6 @@
 	"author": "GambitMonkey Games",
 	"description": "PlayFab Tools for Custom Game Servers",
 	"dependencies": {
-    "com.unity.burst": "1.2.0",
-    "com.unity.collections": "0.4.0",
-    "com.unity.mathematics": "1.1.0",
-    "com.unity.jobs": "0.2.2"
 	},
 	"repository": {
 		"type": "git",
