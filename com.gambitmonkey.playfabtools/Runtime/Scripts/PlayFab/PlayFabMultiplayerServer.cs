@@ -57,17 +57,17 @@ namespace GambitMonkey.PlayFabTools
             {
                 if (singleton != null)
                 {
-                    UnityEngine.Debug.LogWarning("[PlayFabQoS] Multiple PlayFabQoS detected in the scene. Only one PlayFabQoS can exist at a time. The duplicate PlayFabQoS will be destroyed.");
+                    UnityEngine.Debug.LogWarning("[PlayFabMultiplayerServer] Multiple PlayFabMultiplayerServer detected in the scene. Only one PlayFabMultiplayerServer can exist at a time. The duplicate PlayFabMultiplayerServer will be destroyed.");
                     Destroy(gameObject);
                     return;
                 }
-                UnityEngine.Debug.Log("[PlayFabQoS] Created PlayFabQoS singleton (DontDestroyOnLoad)");
+                UnityEngine.Debug.Log("[PlayFabMultiplayerServer] Created PlayFabMultiplayerServer singleton (DontDestroyOnLoad)");
                 singleton = this;
                 if (Application.isPlaying) DontDestroyOnLoad(gameObject);
             }
             else
             {
-                UnityEngine.Debug.Log("[PlayFabQoS] Created PlayFabQoS singleton (ForScene)");
+                UnityEngine.Debug.Log("[PlayFabMultiplayerServer] Created PlayFabMultiplayerServer singleton (ForScene)");
                 singleton = this;
             }
         }
@@ -81,6 +81,7 @@ namespace GambitMonkey.PlayFabTools
         {
             RequestMultiplayerServerRequest request = new RequestMultiplayerServerRequest();
             request.BuildId = PlayFabServerInstance.singleton.BuildIdKey;
+            //TODO dont statically assign preferred regions 
             request.PreferredRegions = new List<string> { "EastUs", "WestUs" };
             request.SessionId = Guid.NewGuid().ToString();
             PlayFabMultiplayerAPI.RequestMultiplayerServer(request, MultiplayerServerResponseSuccess, Error, null, null);
@@ -90,6 +91,7 @@ namespace GambitMonkey.PlayFabTools
         {
             RequestMultiplayerServerRequest request = new RequestMultiplayerServerRequest();
             request.BuildId = PlayFabServerInstance.singleton.BuildIdKey;
+            //TODO dont statically assign preferred regions
             request.PreferredRegions = new List<string> { "EastUs", "WestUs" };
             request.SessionId = Guid.NewGuid().ToString();
             PlayFabMultiplayerAPI.RequestMultiplayerServer(request, MultiplayerServerResponseSuccess, Error, null, null);
@@ -108,7 +110,6 @@ namespace GambitMonkey.PlayFabTools
             request.Region = region;
             PlayFabMultiplayerAPI.ShutdownMultiplayerServer(request, ShutdownMultiplayerServerSuccess, Error, null, null);
             Debug.Log("[PlayFabMultiplayerServer] Shutting Down: " + sessionId + " Region: " + region);
-
         }
 
         public void ShutDownAllMultiplayerServer()
@@ -137,8 +138,8 @@ namespace GambitMonkey.PlayFabTools
                 portList.Append("Name: " + port.Name + " Num: " + port.Num + " Prot: " + port.Protocol + ", ");
             }
 
-            Debug.Log("[PlayFab Manager] Multiplayer Server Request Succeeded");
-            Debug.Log("[PlayFab Manager] Server Info: IP - " + result.IPV4Address + " | Ports [" + portList.ToString() +  "]  | Region - " + result.Region + "  | Session Id: " + result.SessionId);
+            Debug.Log("[PlayFabMultiplayerServer] Multiplayer Server Request Succeeded");
+            Debug.Log("[PlayFabMultiplayerServer] Server Info: IP - " + result.IPV4Address + " | Ports [" + portList.ToString() +  "]  | Region - " + result.Region + "  | Session Id: " + result.SessionId);
             
             //Add server to Dictionary so we can track it.
             servers.Add(result.Region, result.SessionId);

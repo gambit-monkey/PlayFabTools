@@ -77,7 +77,7 @@ namespace GambitMonkey.PlayFabTools
 
         ///<summary>
         ///Optional Scriptable Object Events to mimic the Unity Events
-        ///We give these an an option as they are easier to debug and raise
+        ///We give these as an option as they are easier to debug and raise
         ///</summary>
         [Header("Scriptable Object Events")]
         public GameEvent OnSOShutDown;

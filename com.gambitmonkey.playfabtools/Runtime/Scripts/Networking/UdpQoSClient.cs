@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GambitMonkey.PlayFabTools.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,94 +48,21 @@ namespace GambitMonkey.Networking
             }
         }
 
-        //public static void Ping(string hostName, int port, string message)
-        //{
-        //    using (UdpClient udpClient = new UdpClient())
-        //    {
-        //        try
-        //        {
-        //            udpClient.Client.SendTimeout = 1000;
-        //            udpClient.Client.ReceiveTimeout = 1000;
-        //            udpClient.Connect(hostName, port);
-
-        //            // Sends a message to the host to which you have connected.
-        //            Byte[] sendBytes = Encoding.ASCII.GetBytes(message);
-
-        //            var watch = new Stopwatch();
-        //            watch.Start();
-
-        //            udpClient.Send(sendBytes, sendBytes.Length);
-
-        //            //IPEndPoint object will allow us to read datagrams sent from any source.
-        //            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-
-        //            // Blocks until a message returns on this socket from a remote host.
-        //            Byte[] receiveBytes = udpClient.Receive(ref RemoteIpEndPoint);
-        //            string returnData = Encoding.ASCII.GetString(receiveBytes);
-
-        //            watch.Stop();
-        //            var roundTripLatency = watch.ElapsedMilliseconds;
-
-        //            // Uses the IPEndPoint object to determine which host responded.
-        //            UnityEngine.Debug.Log("[UdpQoSClient] This is the message you received " + returnData.ToString());
-        //            UnityEngine.Debug.Log("[UdpQoSClient] This message was sent from " + RemoteIpEndPoint.Address.ToString() + " on their port number " + RemoteIpEndPoint.Port.ToString());
-        //            UnityEngine.Debug.Log("[UdpQoSClient] RoundTripTime (RTT): " + roundTripLatency + "ms");
-        //            udpClient.Close();
-        //            watch.Reset();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            UnityEngine.Debug.LogError("[UdpQoSClient] Error: " + e.ToString());
-        //        }
-        //    }
-        //}
-
-        public static async Task Ping(string hostName, int port, string message)
+        public static IEnumerator Ping(string hostName, int port, string message)
         {
-            SendMessage(hostName, port, message);
-            ReceiveMessages();
+            yield return Send(hostName, port, message);
         }
 
         public static IEnumerator Ping(string hostName, int port, byte[] message)
         {
-
-            //SendMessage(hostName, port, message);
-            //ReceiveMessages();
-            yield return Send(hostName, port, message);
-            //yield return null;
-
-            //var task2watch = new Stopwatch();
-
-            //task2watch.Start();
-            //var watchtask2 = Send(hostName, port, message).ContinueWith(x =>
-            //{
-            //    task2watch.Stop();
-            //    UnityEngine.Debug.Log("[PlayFabQoS] Server: " + hostName + " replied in " + task2watch.ElapsedMilliseconds + " ms");
-            //});
-
-            //return watchtask2;
+            yield return Send(hostName, port, message);            
         }
 
-        public static IEnumerator Ping(string hostName, Dictionary<string,long> servers, int port, byte[] message)
-        {
-
-            //SendMessage(hostName, port, message);
-            //ReceiveMessages();
-            long rtt = Send(hostName, port, message);
-            servers[hostName] = rtt;
-            yield return rtt;
-            //yield return null;
-
-            //var task2watch = new Stopwatch();
-
-            //task2watch.Start();
-            //var watchtask2 = Send(hostName, port, message).ContinueWith(x =>
-            //{
-            //    task2watch.Stop();
-            //    UnityEngine.Debug.Log("[PlayFabQoS] Server: " + hostName + " replied in " + task2watch.ElapsedMilliseconds + " ms");
-            //});
-
-            //return watchtask2;
+        public static IEnumerator Ping(PlayFabQosServerModel server, int port, byte[] message)
+        {   
+            long rtt = Send(server.ServerUrl, port, message);
+            server.RTT = rtt;
+            yield return rtt;            
         }
 
         public static IPEndPoint GetIPEndPointFromHostName(string hostName, int port, bool throwIfMoreThanOneIP)
@@ -268,8 +196,7 @@ namespace GambitMonkey.Networking
         {
             UdpClient udpClient = new UdpClient();
             Stopwatch rtt = new Stopwatch();
-            //try
-            //{
+            
             //UnityEngine.Debug.Log("Starting UDP connect");
             udpClient.Connect(server, port);
 
@@ -287,17 +214,40 @@ namespace GambitMonkey.Networking
             //TimeSpan measuredPing = receiveTime - sendTime;
             UnityEngine.Debug.Log("Ping from Server " + server + " took " + rtt.ElapsedMilliseconds + "ms"); //measuredPing.TotalSeconds + "ms");
             udpClient.Close();
+            return rtt.ElapsedMilliseconds;            
+        }
+
+        /// <summary>
+        /// Send Message and return RTT in Milliseconds
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="port"></param>
+        /// <param name="message"></param>
+        /// <returns>RTT in Milliseconds</returns>
+        private static long Send(string server, int port, string message)
+        {
+            UdpClient udpClient = new UdpClient();
+            Stopwatch rtt = new Stopwatch();
+
+            //UnityEngine.Debug.Log("Starting UDP connect");
+            udpClient.Connect(server, port);
+            byte[] sendBytes = Encoding.ASCII.GetBytes(message);
+
+            udpClient.Send(sendBytes, 2);
+            //DateTime sendTime = DateTime.Now;
+            rtt.Start();
+            IPEndPoint remoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            Byte[] receiveBytes = udpClient.Receive(ref remoteIpEndPoint);
+            //DateTime receiveTime = DateTime.Now;
+            rtt.Stop();
+
+            string returnData = Encoding.ASCII.GetString(receiveBytes);
+            //UnityEngine.Debug.Log("Data Returned " + returnData);
+
+            //TimeSpan measuredPing = receiveTime - sendTime;
+            UnityEngine.Debug.Log("Ping from Server " + server + " took " + rtt.ElapsedMilliseconds + "ms"); //measuredPing.TotalSeconds + "ms");
+            udpClient.Close();
             return rtt.ElapsedMilliseconds;
-            //}
-            //catch (Exception e)
-            //{
-            //    UnityEngine.Debug.Log(e.Message);
-            //    UnityEngine.Debug.Log(e.StackTrace);
-            //}
-            //finally
-            //{
-            //    udpClient.Close();
-            //}
-        }        
+        }
     }
 }
