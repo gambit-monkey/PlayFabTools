@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
@@ -140,3 +141,4 @@ namespace GambitMonkey.Editors
         complete
     }
 }
+#endif
