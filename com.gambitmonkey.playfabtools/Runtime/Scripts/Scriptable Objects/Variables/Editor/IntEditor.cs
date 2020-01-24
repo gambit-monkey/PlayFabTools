@@ -1,18 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEngine;
-
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
 namespace GambitMonkey.ScriptableObjects
 {
     [CustomEditor(typeof(IntVariable))]
     [CanEditMultipleObjects]
-    public class SOIntEditor : Editor
+    internal class SOIntEditor : Editor
     {
-#if UNITY_EDITOR
         private int intModifyValue = 0;
 
         public override void OnInspectorGUI()
@@ -51,6 +46,6 @@ namespace GambitMonkey.ScriptableObjects
             }
             EditorGUILayout.EndVertical();
         }
-#endif
     }
 }
+#endif

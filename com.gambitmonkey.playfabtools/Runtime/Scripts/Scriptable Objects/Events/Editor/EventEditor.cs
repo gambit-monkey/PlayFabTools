@@ -1,18 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEngine;
-
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
 namespace GambitMonkey.ScriptableObjects
 {
     [CustomEditor(typeof(GameEvent))]
     [CanEditMultipleObjects]
-    public class ScriptableGameEventEditor : Editor
+    internal class ScriptableGameEventEditor : Editor
     {
-#if UNITY_EDITOR
         public override void OnInspectorGUI()
         {
             //Draw the defualt inspector options
@@ -30,6 +25,7 @@ namespace GambitMonkey.ScriptableObjects
                 }
             }
         }
-#endif
     }
 }
+#endif
+

@@ -1,18 +1,16 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
 namespace GambitMonkey.ScriptableObjects
 {
     [CustomEditor(typeof(FloatEvent))]
     [CanEditMultipleObjects]
-    public class ScriptableFloatGameEventEditor : Editor
+    internal class ScriptableFloatGameEventEditor : Editor
     {
-#if UNITY_EDITOR
+
         [SerializeField]
         public float hSliderValue = 0.0F;
         public override void OnInspectorGUI()
@@ -34,6 +32,7 @@ namespace GambitMonkey.ScriptableObjects
                 }
             }
         }
-#endif
     }
 }
+#endif
+

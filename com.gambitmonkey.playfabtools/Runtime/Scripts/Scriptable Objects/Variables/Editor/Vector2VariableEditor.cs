@@ -1,18 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEngine;
-
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
 namespace GambitMonkey.ScriptableObjects
 {
     [CustomEditor(typeof(Vector2Variable))]
     [CanEditMultipleObjects]
-    public class SOVector2Editor : Editor
+    internal class SOVector2Editor : Editor
     {
-#if UNITY_EDITOR
         public override void OnInspectorGUI()
         {
             //Draw the defualt inspector options
@@ -36,6 +31,7 @@ namespace GambitMonkey.ScriptableObjects
             }
             EditorGUILayout.EndVertical();
         }
-#endif
     }
 }
+#endif
+

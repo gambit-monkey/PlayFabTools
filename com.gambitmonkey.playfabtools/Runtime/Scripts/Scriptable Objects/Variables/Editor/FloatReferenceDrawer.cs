@@ -5,13 +5,14 @@
 // Date:   10/04/17
 // ----------------------------------------------------------------------------
 
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
 namespace GambitMonkey.ScriptableObjects.Variables
 {
     [CustomPropertyDrawer(typeof(FloatReference))]
-    public class FloatReferenceDrawer : PropertyDrawer
+    internal class FloatReferenceDrawer : PropertyDrawer
     {
         /// <summary>
         /// Options to display in the popup to select constant or variable.
@@ -66,3 +67,4 @@ namespace GambitMonkey.ScriptableObjects.Variables
         }
     }
 }
+#endif

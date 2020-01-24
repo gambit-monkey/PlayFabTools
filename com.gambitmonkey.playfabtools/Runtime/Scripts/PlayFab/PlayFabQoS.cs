@@ -196,11 +196,11 @@ public partial class PlayFabQoS : MonoBehaviour
     private JobHandle PingJob(UdpClient udpClient, IPEndPoint remoteIpEndPoint, string hostName, int port, byte[] message)
     {
         UdpQosJob job = new UdpQosJob();
-        job.udpClient = udpClient;
-        //job.remoteIpEndPoint = remoteIpEndPoint;
-        job.hostName = hostName;
-        job.port = port;
-        job.message = message;
+        //job.udpClient = udpClient;
+        ////job.remoteIpEndPoint = remoteIpEndPoint;
+        //job.hostName = hostName;
+        //job.port = port;
+        //job.message = message;
         return job.Schedule();
     }
 
